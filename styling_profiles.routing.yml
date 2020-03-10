@@ -1,0 +1,45 @@
+# profile management
+entity.styling_profile.collection:
+  path: '/admin/config/system/styling-profiles'
+  defaults:
+    _entity_list: 'styling_profile'
+    _title: 'Styling profiles'
+  requirements:
+    _permission: 'administer styling profiles'
+
+# default settings
+styling_profiles.settings_form:
+  path: '/admin/config/system/styling-profiles/settings'
+  defaults:
+    _title: 'Styling profile settings'
+    _form: '\Drupal\styling_profiles\Form\SettingsForm'
+  requirements:
+    _permission: 'administer styling profiles'
+
+# add form
+entity.styling_profile.add_form:
+  path: '/admin/config/system/styling-profiles/add'
+  defaults:
+    _entity_form: styling_profile.default
+    _title: 'Add styling profile'
+#    _title_callback: '\Drupal\styling_profiles\ContainerController::addTitle'
+#    entity_type_id: 'styling_profile'
+  requirements:
+    _permission: 'administer styling profiles'
+
+# edit form
+entity.styling_profile.edit_form:
+  path: '/admin/config/system/styling-profiles/{styling_profile}/edit'
+  defaults:
+    _entity_form: styling_profile.default
+    _title: 'Edit styling profile'
+  requirements:
+    _permission: 'administer styling profiles'
+
+entity.styling_profile.delete_form:
+  path: '/admin/config/system/styling-profiles/{styling_profile}/delete'
+  defaults:
+    _entity_form: styling_profile.delete
+    _title: 'Delete profile'
+  requirements:
+    _permission: 'administer styling profiles'

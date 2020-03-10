@@ -1,0 +1,10 @@
+styling_profiles.styling_profile.*:
+  type: config_entity
+  label: 'Container settings'
+  mapping:
+    id:
+      type: string
+      label: 'ID'
+    label:
+      type: label
+      label: 'Label'

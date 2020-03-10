@@ -1,0 +1,6 @@
+name: 'Styling Profiles'
+type: module
+description: 'Allows the creation of styling profiles.'
+package: 'Styling'
+core: 8.x
+configure: styling_profiles.settings_form

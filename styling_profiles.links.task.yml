@@ -1,0 +1,9 @@
+styling_profiles.profile_list_tab:
+  route_name: entity.styling_profile.collection
+  title: Profiles
+  base_route: entity.styling_profile.collection
+
+styling_profiles.settings_form_tab:
+  route_name: styling_profiles.settings_form
+  title: Settings
+  base_route: entity.styling_profile.collection

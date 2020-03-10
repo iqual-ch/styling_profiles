@@ -1,0 +1,5 @@
+entity.styling_profile.collection:
+  title: 'Styling profiles'
+  description: 'Styling profiles.'
+  route_name: entity.styling_profile.collection
+  parent: system.admin_config_system

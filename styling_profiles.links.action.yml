@@ -1,0 +1,5 @@
+entity.styling_profile.add_form:
+  route_name: entity.styling_profile.add_form
+  title: 'Add profile'
+  appears_on:
+    - entity.styling_profile.collection
