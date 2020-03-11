@@ -1,0 +1,37 @@
+<?php
+
+/**
+ * Implements hook_page_attachments_alter().
+ * 
+ * Add dummy library to trigger hook_profiles_css_alter
+ * 
+ */
+function styling_profiles_page_attachments_alter(array &$attachments) {
+  $node = \Drupal::routeMatch()->getParameter('node');
+  if( $node instanceof \Drupal\node\NodeInterface && $node->field_styling_profile[0] && $node->field_styling_profile[0]->target_id ){
+     $attachments['#attached']['library'][] = 'styling_profiles/'.$node->field_styling_profile[0]->target_id ;
+  }
+}
+
+/**
+ * Implements hook_profiles_css_alter().
+ * 
+ * Rewrite CSS paths to corresponding files in styling profile
+ * 
+ */
+function styling_profiles_css_alter(&$css, \Drupal\Core\Asset\AttachedAssetsInterface $assets) {
+  $node = \Drupal::routeMatch()->getParameter('node');
+  if( $node instanceof \Drupal\node\NodeInterface && $node->field_styling_profile[0] && $node->field_styling_profile[0]->target_id ){
+    $cssAltered = [];
+    foreach( array_keys( $css ) as $filename ){
+      $alteredFilename = str_replace( 'themes/custom', 'sites/default/files/styling_profiles/'. $node->field_styling_profile[0]->target_id, $filename );
+      if( file_exists($alteredFilename) ){
+        $cssAltered[$alteredFilename] = $css[$filename];
+        $cssAltered[$alteredFilename]['data'] = $alteredFilename;
+      }else{
+        $cssAltered[$filename] = $css[$filename];
+      }
+    }
+    $css = $cssAltered;
+  }
+}

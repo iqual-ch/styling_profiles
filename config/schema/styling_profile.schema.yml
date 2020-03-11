@@ -8,3 +8,6 @@ styling_profiles.styling_profile.*:
     label:
       type: label
       label: 'Label'
+    styles:
+      type: mapping
+      label: 'Styles'

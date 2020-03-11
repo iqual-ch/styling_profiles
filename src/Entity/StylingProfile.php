@@ -23,6 +23,7 @@ use Drupal\Core\Config\Entity\ConfigEntityBase;
  *   entity_keys = {
  *     "id" = "id",
  *     "label" = "label",
+ *     "styles" = "styles",
  *   },
  *   links = {
  *     "add-form" = "/admin/config/system/styling-profiles/add",
