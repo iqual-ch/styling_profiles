@@ -2,6 +2,8 @@
 
 namespace Drupal\styling_profiles\Plugin\styling_profiles\Handler;
 
+use Drupal\styling_profiles\Plugin\styling_profiles\HandlerPluginInterface;
+
 /**
  * Process profile selection with domain switch.
  *
@@ -10,7 +12,7 @@ namespace Drupal\styling_profiles\Plugin\styling_profiles\Handler;
  *   name = @Translation("Default profile selector"),
  * )
  */
-class DefaultHandler {
+class DefaultHandler implements HandlerPluginInterface {
 
   /**
    * Select a profile to be used.

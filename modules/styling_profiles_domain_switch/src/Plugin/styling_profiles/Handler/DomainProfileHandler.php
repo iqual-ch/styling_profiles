@@ -1,6 +1,8 @@
 <?php
 
-namespace Drupal\styling_profiles\Plugin\styling_profiles\Handler;
+namespace Drupal\styling_profiles_domain_switch\Plugin\styling_profiles\Handler;
+
+use Drupal\styling_profiles\Plugin\styling_profiles\Handler\DefaultHandler;
 
 /**
  * Process profile selection with domain switch.
@@ -11,7 +13,7 @@ namespace Drupal\styling_profiles\Plugin\styling_profiles\Handler;
  *   weight = 150
  * )
  */
-class DomainProfileHandler extends Content {
+class DomainProfileHandler extends DefaultHandler {
 
   /**
    *

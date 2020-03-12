@@ -20,17 +20,17 @@ function styling_profiles_domain_switch_help($route_name, RouteMatchInterface $r
   }
 }
 
-/**
- * Implements hook_page_attachments_alter().
- * 
- * Add dummy library to trigger hook_profiles_css_alter
- * 
- */
-function styling_profiles_domain_switch_page_attachments_alter(array &$attachments) {
-  $config = \Drupal::config('styling_profiles_domain_switch.settings');
-  $activeDomainID = \Drupal::service('domain.negotiator')->getActiveId();
-  $domainProfile = $config->get($activeDomainID . '_site');
-  if( $domainProfile && in_array( $domainProfile, array_keys( \Drupal::entityTypeManager()->getStorage('styling_profile')->loadMultiple() ) ) ){
-    $attachments['#attached']['library'][] = 'styling_profiles/'.$domainProfile ;
-  }
-}
+// /**
+//  * Implements hook_page_attachments_alter().
+//  * 
+//  * Add dummy library to trigger hook_profiles_css_alter
+//  * 
+//  */
+// function styling_profiles_domain_switch_page_attachments_alter(array &$attachments) {
+//   $config = \Drupal::config('styling_profiles_domain_switch.settings');
+//   $activeDomainID = \Drupal::service('domain.negotiator')->getActiveId();
+//   $domainProfile = $config->get($activeDomainID . '_site');
+//   if( $domainProfile && in_array( $domainProfile, array_keys( \Drupal::entityTypeManager()->getStorage('styling_profile')->loadMultiple() ) ) ){
+//     $attachments['#attached']['library'][] = 'styling_profiles/'.$domainProfile ;
+//   }
+// }

@@ -88,7 +88,11 @@ class RuleHandlerManager extends DefaultPluginManager implements FallbackPluginM
    */
   public function getHandlers() {
     $handlers = [];
-    // Get all handlers
+    $definitions = $this->getDefinitions();
+    uasort($definitions, ['\Drupal\Component\Utility\SortArray', 'sortByWeightElement']);
+    foreach ($definitions as $definition) {
+      $handlers[] = $this->getFactory()->createInstance($definition['id']);
+    }
     return $handlers;
   }
 

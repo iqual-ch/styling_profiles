@@ -1,0 +1,9 @@
+name: Stying Profile node Switch
+description: 'Styling profile switch for different nodes'
+type: module
+package: Styling
+version: VERSION
+core: 8.x
+dependencies:
+  - drupal:node
+  - styling_profiles:styling_profiles
