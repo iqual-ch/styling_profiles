@@ -34,12 +34,7 @@ class StylingProfiles implements CacheContextInterface {
     foreach($handlers as $handler) {
       $profile = $handler->getProfile($profile);   
     }
-
-    echo "<br/>context: " . $profile;
-
     return $profile;
-
-
   }
 
   /**
