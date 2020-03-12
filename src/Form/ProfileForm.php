@@ -35,9 +35,7 @@ class ProfileForm extends EntityForm {
     ];
 
     $styleSettings =$profile->get('styles');
-    // $service = \Drupal::service('iq_barrio.theme_services');
-    require_once DRUPAL_ROOT . '/' . drupal_get_path('theme', 'iq_barrio') . "/src/Service/ThemeServices.php";
-    $service = new \Drupal\iq_barrio\Service\ThemeServices();
+    $service = \Drupal::service('iq_barrio_helper.iq_barrio_service');
     $service->alterThemeSettingsForm($form, $styleSettings);
     return $form;
   }
@@ -97,9 +95,7 @@ class ProfileForm extends EntityForm {
       return isset($styles[$name]) ? $styles[$name] : $matched;
     }, $definitionContent);
 
-    // $service = \Drupal::service('iq_barrio.theme_services');
-    require_once DRUPAL_ROOT . '/' . drupal_get_path('theme', 'iq_barrio') . "/src/Service/ThemeServices.php";
-    $service = new \Drupal\iq_barrio\Service\ThemeServices();
+    $service = \Drupal::service('iq_barrio_helper.iq_barrio_service');
     $service->writeDefinitionsFile($styles, $_SERVER["DOCUMENT_ROOT"].'/sites/default/files/styling_profiles/'.$form_state->getValue('id').'/iq_barrio/resources/sass/_definitions.scss', $_SERVER["DOCUMENT_ROOT"].'/themes/custom/iq_barrio/resources/sass/_definitions.scss.txt' );
 
     // Tell the user we've updated the profile.
