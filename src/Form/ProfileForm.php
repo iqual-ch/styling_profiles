@@ -34,15 +34,11 @@ class ProfileForm extends EntityForm {
       ],
     ];
 
-    $form_state->setValue('styles', $profile->get('styles') );
-
-    // load iq_barrio settings form
-    // feels really wrong, surely go to hell for this one...
-
-    require_once DRUPAL_ROOT . '/' . drupal_get_path('theme', 'iq_barrio') . "/iq_barrio.theme";
-    iq_barrio_form_system_theme_settings_alter($form, $form_state);
-    unset($form['#submit']);    
-
+    $styleSettings =$profile->get('styles');
+    // $service = \Drupal::service('iq_barrio.theme_services');
+    require_once DRUPAL_ROOT . '/' . drupal_get_path('theme', 'iq_barrio') . "/src/Service/ThemeServices.php";
+    $service = new \Drupal\iq_barrio\Service\ThemeServices();
+    $service->alterThemeSettingsForm($form, $styleSettings);
     return $form;
   }
 
@@ -88,10 +84,6 @@ class ProfileForm extends EntityForm {
       }
     }
 
-
-    // write new definitions file
-    // quick n dirty!!
-
     foreach( $styles as $stylingKey => $stylingValaue ){
       if( (strpos($stylingKey, 'opacity') !== false) && empty($stylingValaue)  ){
         $styles[$stylingKey] = 1;
@@ -105,11 +97,13 @@ class ProfileForm extends EntityForm {
       return isset($styles[$name]) ? $styles[$name] : $matched;
     }, $definitionContent);
 
-    file_put_contents( $_SERVER["DOCUMENT_ROOT"].'/sites/default/files/styling_profiles/'.$form_state->getValue('id').'/iq_barrio/resources/sass/_definitions.scss' , $definitionContent);
+    // $service = \Drupal::service('iq_barrio.theme_services');
+    require_once DRUPAL_ROOT . '/' . drupal_get_path('theme', 'iq_barrio') . "/src/Service/ThemeServices.php";
+    $service = new \Drupal\iq_barrio\Service\ThemeServices();
+    $service->writeDefinitionsFile($styles, $_SERVER["DOCUMENT_ROOT"].'/sites/default/files/styling_profiles/'.$form_state->getValue('id').'/iq_barrio/resources/sass/_definitions.scss', $_SERVER["DOCUMENT_ROOT"].'/themes/custom/iq_barrio/resources/sass/_definitions.scss.txt' );
 
-    \Drupal::moduleHandler()->invoke('styling_profiles', 'library_info_build', []);
-
-    // Tell the user we've updated their ball.
+    // Tell the user we've updated the profile.
+    $action = $status == SAVED_UPDATED ? 'updated' : 'added';
     drupal_set_message($this->t('Profile %label has been %action.', ['%label' => $profile->label(), '%action' => $action]));
     $this->logger('sample_config_entity')->notice('Styling profile %label has been %action.', ['%label' => $profile->label(), 'link' => $edit_link]);
 
