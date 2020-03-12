@@ -1,0 +1,9 @@
+services:
+  cache_context.styling_profiles:
+    class: Drupal\styling_profiles\CacheContext\StylingProfiles
+    arguments: []
+    tags:
+      - { name: cache.context }
+  styling_profile.service.rule_handler_manager:
+    class: Drupal\styling_profiles\Service\RuleHandlerManager
+    parent: default_plugin_manager

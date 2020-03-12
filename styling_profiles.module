@@ -1,35 +1,62 @@
 <?php
 
 /**
+ * @file
+ */
+
+/**
+ * Add a class to the body element to indicate editing mode.
+ *
+ * @param array $variables
+ *   The variables.
+ */use Drupal\Core\Asset\AttachedAssetsInterface;
+use Drupal\node\NodeInterface;
+
+/**
+ *
+ */
+function styling_profiles_preprocess_html(&$variables) {
+  $variables['#cache']['contexts'][] = 'styling_profiles';
+}
+
+/**
  * Implements hook_page_attachments_alter().
- * 
- * Add dummy library to trigger hook_profiles_css_alter
- * 
+ *
+ * Add dummy library to trigger hook_profiles_css_alter.
  */
 function styling_profiles_page_attachments_alter(array &$attachments) {
   $node = \Drupal::routeMatch()->getParameter('node');
-  if( $node instanceof \Drupal\node\NodeInterface && $node->field_styling_profile[0] && $node->field_styling_profile[0]->target_id ){
-     $attachments['#attached']['library'][] = 'styling_profiles/'.$node->field_styling_profile[0]->target_id ;
+  if ($node instanceof NodeInterface && $node->field_styling_profile[0] && $node->field_styling_profile[0]->target_id) {
+    $attachments['#attached']['library'][] = 'styling_profiles/' . $node->field_styling_profile[0]->target_id;
   }
 }
 
 /**
  * Implements hook_profiles_css_alter().
- * 
- * Rewrite CSS paths to corresponding files in styling profile
- * 
+ *
+ * Rewrite CSS paths to corresponding files in styling profile.
  */
-function styling_profiles_css_alter(&$css, \Drupal\Core\Asset\AttachedAssetsInterface $assets) {
-  $stylingProfiles = array_filter($assets->getLibraries(), function($var) { return preg_match("/\bstyling_profiles\/\b/i", $var); });
-  foreach( $stylingProfiles as $profile ){
-    $profileID = array_pop( explode('/', $profile) );
+function styling_profiles_css_alter(&$css, AttachedAssetsInterface $assets) {
+  $styleProfileRuleHandlerManager = \Drupal::service('styling_profile.service.rule_handler_manager');
+  $handlers = $styleProfileRuleHandlerManager->getHandlers();
+  $profile = '';
+  foreach ($handlers as $handler) {
+    $profile = $handler->getProfile($profile);
+  }
+
+  $stylingProfiles = array_filter($assets->getLibraries(), function ($var) {
+    return preg_match("/\bstyling_profiles\/\b/i", $var);
+  });
+  foreach ($stylingProfiles as $profile) {
+    $profileID = array_pop(explode('/', $profile));
     $cssAltered = [];
-    foreach( array_keys( $css ) as $filename ){
-      $alteredFilename = str_replace( 'themes/custom', 'sites/default/files/styling_profiles/'. $profileID, $filename );
-      if( file_exists($alteredFilename) ){
+    foreach (array_keys($css) as $filename) {
+      $alteredFilename = str_replace('themes/custom', 'sites/default/files/styling_profiles/' . $profileID, $filename);
+      if (file_exists($alteredFilename)) {
         $cssAltered[$alteredFilename] = $css[$filename];
         $cssAltered[$alteredFilename]['data'] = $alteredFilename;
-      }else{
+      }
+      else {
         $cssAltered[$filename] = $css[$filename];
       }
     }
