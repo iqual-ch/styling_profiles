@@ -20,11 +20,12 @@ function styling_profiles_page_attachments_alter(array &$attachments) {
  * 
  */
 function styling_profiles_css_alter(&$css, \Drupal\Core\Asset\AttachedAssetsInterface $assets) {
-  $node = \Drupal::routeMatch()->getParameter('node');
-  if( $node instanceof \Drupal\node\NodeInterface && $node->field_styling_profile[0] && $node->field_styling_profile[0]->target_id ){
+  $stylingProfiles = array_filter($assets->getLibraries(), function($var) { return preg_match("/\bstyling_profiles\/\b/i", $var); });
+  foreach( $stylingProfiles as $profile ){
+    $profileID = array_pop( explode('/', $profile) );
     $cssAltered = [];
     foreach( array_keys( $css ) as $filename ){
-      $alteredFilename = str_replace( 'themes/custom', 'sites/default/files/styling_profiles/'. $node->field_styling_profile[0]->target_id, $filename );
+      $alteredFilename = str_replace( 'themes/custom', 'sites/default/files/styling_profiles/'. $profileID, $filename );
       if( file_exists($alteredFilename) ){
         $cssAltered[$alteredFilename] = $css[$filename];
         $cssAltered[$alteredFilename]['data'] = $alteredFilename;

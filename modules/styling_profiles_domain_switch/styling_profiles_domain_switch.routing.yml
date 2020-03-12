@@ -1,0 +1,7 @@
+styling_profiles_domain_switch.domain_profile:
+  path: '/admin/config/domain/domain_profile_switch/config'
+  defaults:
+    _form: '\Drupal\styling_profiles_domain_switch\Form\DomainStylingProfileSwitchConfigForm'
+    _title: 'Domain styling profile configuration'
+  requirements:
+    _permission: 'administer domains'

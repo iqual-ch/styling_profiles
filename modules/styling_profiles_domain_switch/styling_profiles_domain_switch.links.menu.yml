@@ -1,0 +1,6 @@
+styling_profiles_domain_switch.domain_profile:
+  title: Domain styling profile switch
+  route_name: styling_profiles_domain_switch.domain_profile
+  description: 'Manage styling profiles for specific domains.'
+  parent: domain.admin
+  weight: 10

@@ -1,0 +1,4 @@
+styling_profiles_domain_switch.admin:
+  title: Domain profiles 
+  route_name: styling_profiles_domain_switch.domain_profile
+  base_route: domain.admin

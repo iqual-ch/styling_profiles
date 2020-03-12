@@ -1,0 +1,36 @@
+<?php
+
+/**
+ * @file
+ * Domain theme Switcher.
+ */
+
+use Drupal\Core\Routing\RouteMatchInterface;
+
+/**
+ * Implements hook_help().
+ */
+function styling_profiles_domain_switch_help($route_name, RouteMatchInterface $route_match) {
+  switch ($route_name) {
+    case 'styling_profiles_domain_switch.domain_profile':
+      $output = t('<p>Find the list of domains and select the styling profile against each domain.
+          You may select the profile corresponding to each domain and if you leave 
+          them blank then default profile will load.</p>');
+      return $output;
+  }
+}
+
+/**
+ * Implements hook_page_attachments_alter().
+ * 
+ * Add dummy library to trigger hook_profiles_css_alter
+ * 
+ */
+function styling_profiles_domain_switch_page_attachments_alter(array &$attachments) {
+  $config = \Drupal::config('styling_profiles_domain_switch.settings');
+  $activeDomainID = \Drupal::service('domain.negotiator')->getActiveId();
+  $domainProfile = $config->get($activeDomainID . '_site');
+  if( $domainProfile && in_array( $domainProfile, array_keys( \Drupal::entityTypeManager()->getStorage('styling_profile')->loadMultiple() ) ) ){
+    $attachments['#attached']['library'][] = 'styling_profiles/'.$domainProfile ;
+  }
+}
