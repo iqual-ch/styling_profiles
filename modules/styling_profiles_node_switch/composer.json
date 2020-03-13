@@ -1,0 +1,16 @@
+{
+  "name": "iqual/styling_profiles_node_switch",
+  "description": "Enables styling profiles per node.",
+  "type": "drupal-custom-module",
+  "keywords": [
+    "Drupal"
+  ],
+  "homepage": "https://github.com/iqual-ch/styling_profiles_node_switch",
+  "support": {
+    "issues": "https://github.com/iqual-ch/styling_profiles_node_switch/issues",
+    "source": "https://github.com/iqual-ch/styling_profiles_node_switch"
+  },
+  "require": {
+
+  }
+}

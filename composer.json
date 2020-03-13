@@ -1,0 +1,18 @@
+{
+  "name": "iqual/styling_profiles",
+  "description": "Adds additional styling via profiles. Incldues 2ubmodules for syling per node and domain.",
+  "type": "drupal-custom-module",
+  "keywords": [
+    "Drupal"
+  ],
+  "homepage": "https://github.com/iqual-ch/styling_profiles",
+  "support": {
+    "issues": "https://github.com/iqual-ch/styling_profiles/issues",
+    "source": "https://github.com/iqual-ch/styling_profiles"
+  },
+  "require": {
+    "iqual/iq_barrio_helper": "*",
+    "drupal/domain": "*",
+    "drupal/core": "*"
+  }
+}
