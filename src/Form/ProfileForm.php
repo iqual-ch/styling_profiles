@@ -34,6 +34,10 @@ class ProfileForm extends EntityForm {
       ],
     ];
 
+    if( $profile->id() ){
+      $form['id']['#disabled'] = true;
+    }
+
     // load profile styles if profile exists
     // otherwise load barrio settings
     if( $profile->id() ){
