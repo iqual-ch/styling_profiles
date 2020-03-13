@@ -45,24 +45,4 @@ function styling_profiles_css_alter(&$css, AttachedAssetsInterface $assets) {
     }
   }
   $css = $cssAltered;
-
-
-  // $stylingProfiles = array_filter($assets->getLibraries(), function ($var) {
-  //   return preg_match("/\bstyling_profiles\/\b/i", $var);
-  // });
-  // foreach ($stylingProfiles as $profile) {
-  //   $profileID = array_pop(explode('/', $profile));
-  //   $cssAltered = [];
-  //   foreach (array_keys($css) as $filename) {
-  //     $alteredFilename = str_replace('themes/custom', 'sites/default/files/styling_profiles/' . $profileID, $filename);
-  //     if (file_exists($alteredFilename)) {
-  //       $cssAltered[$alteredFilename] = $css[$filename];
-  //       $cssAltered[$alteredFilename]['data'] = $alteredFilename;
-  //     }
-  //     else {
-  //       $cssAltered[$filename] = $css[$filename];
-  //     }
-  //   }
-  //   $css = $cssAltered;
-  // }
 }

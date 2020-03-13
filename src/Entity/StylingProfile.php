@@ -14,7 +14,7 @@ use Drupal\Core\Config\Entity\ConfigEntityBase;
  *     "storage" = "Drupal\Core\Config\Entity\ConfigEntityStorage",
  *     "form" = {
  *       "default" = "Drupal\styling_profiles\Form\ProfileForm",
- *       "delete" = "Drupal\Core\Entity\EntityDeleteForm"
+ *       "delete" = "Drupal\styling_profiles\Form\ProfileDeleteForm"
  *     },
  *     "list_builder" = "Drupal\styling_profiles\ProfileListBuilder"
  *   },

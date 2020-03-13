@@ -34,7 +34,15 @@ class ProfileForm extends EntityForm {
       ],
     ];
 
-    $styleSettings =$profile->get('styles');
+    // load profile styles if profile exists
+    // otherwise load barrio settings
+    if( $profile->id() ){
+      $styleSettings = $profile->get('styles');
+    }else{
+      $styleSettings = \Drupal::config('iq_barrio.settings')->get();
+    }
+
+
     $service = \Drupal::service('iq_barrio_helper.iq_barrio_service');
     $service->alterThemeSettingsForm($form, $styleSettings);
     return $form;
@@ -58,9 +66,8 @@ class ProfileForm extends EntityForm {
     $profile->set('styles', $styles);
 
     $status = $profile->save();
-    
+
     $edit_link = $this->entity->link($this->t('Edit'));
-    $action = $status == SAVED_UPDATED ? 'updated' : 'added';
 
     // clone stylesheets from custom themes
     $themes = [
@@ -76,7 +83,7 @@ class ProfileForm extends EntityForm {
           $path = pathinfo($fileDest);
           if (!file_exists($path['dirname'])) {
             mkdir($path['dirname'], 0755, true);
-          } 
+          }
           copy( $filename, $fileDest );
         }
       }
