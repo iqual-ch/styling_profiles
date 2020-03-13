@@ -29,12 +29,7 @@ class StylingProfiles implements CacheContextInterface {
    */
   public function getContext() {
     $styleProfileRuleHandlerManager = \Drupal::service('styling_profile.service.rule_handler_manager');
-    $handlers = $styleProfileRuleHandlerManager->getHandlers();
-    $profile = '';
-    foreach($handlers as $handler) {
-      $profile = $handler->getProfile($profile);   
-    }
-    return $profile;
+    return $styleProfileRuleHandlerManager->getStylingProfile();
   }
 
   /**

@@ -39,48 +39,6 @@ class RuleHandlerManager extends DefaultPluginManager implements FallbackPluginM
   }
 
   /**
-   * Overrides PluginManagerBase::getInstance().
-   *
-   * @param array $options
-   *   An array with the following key/value pairs:
-   *   - id: The id of the plugin.
-   *   - type: The type of the pattern field.
-   *
-   * @return \Drupal\pagedesigner\Plugin\pagedesigner\HandlerPluginInterface[]
-   *   A list of Handler objects.
-   */
-  // public function getInstance(array $options) {
-  //   $handlers = [];
-  //   $definitions = [];
-  //   $type = '*';
-  //   $configuration = [];
-  //   if (!empty($options['entity'])) {
-  //     $type = $options['entity']->bundle();
-  //   }
-  //   else {
-  //     $type = $options['type'];
-  //   }
-  //   $allDefinitions = $this->getDefinitions();
-  //   foreach ($allDefinitions as $plugin_id => $definition) {
-  //     if (in_array($type, $definition['types'])) {
-  //       $definitions[$plugin_id] = $definition;
-  //     }
-  //   }
-  //   if (count($definitions)) {
-  //
-  //     foreach ($definitions as $plugin_id => $definition) {
-  //       $handlers[] = $this
-  //         ->createInstance($plugin_id, $configuration);
-  //     }
-  //   }
-  //   if (empty($handlers)) {
-  //     $handlers[] = $this
-  //       ->createInstance($this->getFallbackPluginId($type), $configuration);
-  //   }
-  //   return $handlers;
-  // }
-
-  /**
    * Returns all handlers, sorted by weight.
    *
    * @return \Drupal\styling_profiles\Plugin\styling_profiles\HandlerPluginInterface[]
@@ -94,6 +52,21 @@ class RuleHandlerManager extends DefaultPluginManager implements FallbackPluginM
       $handlers[] = $this->getFactory()->createInstance($definition['id']);
     }
     return $handlers;
+  }
+
+    /**
+   * Get current styling profile.
+   *
+   * @return \Drupal\styling_profiles\Plugin\styling_profiles\HandlerPluginInterface[]
+   *   A list of Handler objects.
+   */
+  public function getStylingProfile() {
+    $handlers = $this->getHandlers();
+    $profile = '';
+    foreach($handlers as $handler) {
+      $profile = $handler->getProfile($profile);
+    }
+    return $profile;
   }
 
   /**

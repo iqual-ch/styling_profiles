@@ -20,15 +20,8 @@ function styling_profiles_entity_view_alter(&$variables) {
  * Add dummy library to trigger hook_profiles_css_alter.
  */
 function styling_profiles_page_attachments_alter(array &$attachments) {
-
   $styleProfileRuleHandlerManager = \Drupal::service('styling_profile.service.rule_handler_manager');
-  $handlers = $styleProfileRuleHandlerManager->getHandlers();
-  $profile = '';
-  foreach ($handlers as $handler) {
-    $profile = $handler->getProfile($profile);
-  }
-
-  $attachments['#attached']['library'][] = 'styling_profiles/' . $profile;
+  $attachments['#attached']['library'][] = 'styling_profiles/' . $styleProfileRuleHandlerManager->getStylingProfile();
 }
 
 /**
@@ -38,11 +31,7 @@ function styling_profiles_page_attachments_alter(array &$attachments) {
  */
 function styling_profiles_css_alter(&$css, AttachedAssetsInterface $assets) {
   $styleProfileRuleHandlerManager = \Drupal::service('styling_profile.service.rule_handler_manager');
-  $handlers = $styleProfileRuleHandlerManager->getHandlers();
-  $profile = '';
-  foreach ($handlers as $handler) {
-    $profile = $handler->getProfile($profile);
-  }
+  $profile = $styleProfileRuleHandlerManager->getStylingProfile();
 
   $cssAltered = [];
   foreach (array_keys($css) as $filename) {
