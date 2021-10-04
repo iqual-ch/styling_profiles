@@ -15,17 +15,6 @@ use Drupal\Core\Link;
 class DomainStylingProfileSwitchConfigForm extends ConfigFormBase {
 
   /**
-   * Construct function.
-   *
-   * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
-   *   The config factory load.
-   */
-  public function __construct(ConfigFactoryInterface $config_factory) {
-    parent::__construct($config_factory);
-    $this->themeHandler = $theme_handler;
-  }
-
-  /**
    * Create function return static domain loader configuration.
    *
    * @param \Symfony\Component\DependencyInjection\ContainerInterface $container
