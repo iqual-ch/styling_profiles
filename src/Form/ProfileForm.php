@@ -106,7 +106,7 @@ class ProfileForm extends EntityForm {
     }, $definitionContent);
 
     $service = \Drupal::service('iq_barrio_helper.iq_barrio_service');
-    $service->writeDefinitionsFile($styles, $_SERVER["DOCUMENT_ROOT"] . '/sites/default/files/styling_profiles/' . $form_state->getValue('id') . '/iq_barrio/resources/sass/_definitions.scss', $_SERVER["DOCUMENT_ROOT"] . '/themes/custom/iq_barrio/resources/sass/_template.txt');
+    $service->writeDefinitionsFile($styles, $_SERVER["DOCUMENT_ROOT"] . '/sites/default/files/styling_profiles/' . $form_state->getValue('id') . '/iq_barrio/resources/sass/_definitions.scss', $_SERVER["DOCUMENT_ROOT"] . '/themes/custom/iq_barrio/resources/sass/_template.scss.txt');
 
     // Tell the user we've updated the profile.
     $action = $status == SAVED_UPDATED ? 'updated' : 'added';
