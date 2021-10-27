@@ -3,7 +3,7 @@ description: 'Styling profile switch for different nodes'
 type: module
 package: Styling
 version: VERSION
-core: 8.x
+core_version_requirement: ^8.8 || ^9
 dependencies:
   - drupal:node
   - styling_profiles:styling_profiles
