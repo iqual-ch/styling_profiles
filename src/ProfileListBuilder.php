@@ -39,7 +39,7 @@ class ProfileListBuilder extends ConfigEntityListBuilder {
       $operations['edit'] = [
         'title' => t('Edit profile'),
         'weight' => 20,
-        'url' => $entity->urlInfo('edit-form'),
+        'url' => $entity->toUrl('edit-form'),
       ];
     }
     return $operations;
