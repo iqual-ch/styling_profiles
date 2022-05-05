@@ -108,7 +108,7 @@ class ProfileForm extends EntityForm {
 
     // Tell the user we've updated the profile.
     $action = $status == SAVED_UPDATED ? 'updated' : 'added';
-    drupal_set_message($this->t('Profile %label has been %action.', ['%label' => $profile->label(), '%action' => $action]));
+    \Drupal::messenger()->addStatus($this->t('Profile %label has been %action.', ['%label' => $profile->label(), '%action' => $action]));
     $this->logger('styling_profiles')->notice('Styling profile %label has been %action.', ['%label' => $profile->label(), '%action' => $action]);
 
     // Redirect back to the list view.
