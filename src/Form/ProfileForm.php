@@ -70,8 +70,6 @@ class ProfileForm extends EntityForm {
 
     $status = $profile->save();
 
-    $edit_link = $this->entity->link($this->t('Edit'));
-
     // Clone stylesheets from custom themes.
     $themes = [
       $_SERVER["DOCUMENT_ROOT"] . '/themes/custom/iq_barrio',
