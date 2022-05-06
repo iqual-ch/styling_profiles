@@ -25,6 +25,10 @@ use Drupal\Core\Config\Entity\ConfigEntityBase;
  *     "label" = "label",
  *     "styles" = "styles",
  *   },
+ *   config_export = {
+ *     "id",
+ *     "label",
+ *   },
  *   links = {
  *     "add-form" = "/admin/config/system/styling-profiles/add",
  *     "edit-form" = "/admin/config/system/styling-profiles/{styling_profile}/edit",
