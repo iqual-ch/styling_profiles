@@ -28,6 +28,7 @@ use Drupal\Core\Config\Entity\ConfigEntityBase;
  *   config_export = {
  *     "id",
  *     "label",
+ *     "styles",
  *   },
  *   links = {
  *     "add-form" = "/admin/config/system/styling-profiles/add",
@@ -55,5 +56,12 @@ class StylingProfile extends ConfigEntityBase {
    * @var string
    */
   public $label;
+
+  /**
+   * The styles of this profile.
+   *
+   * @var array
+   */
+  public $styles;
 
 }
