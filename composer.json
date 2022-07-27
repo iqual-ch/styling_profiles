@@ -11,6 +11,6 @@
     "source": "https://github.com/iqual-ch/styling_profiles"
   },
   "require": {
-    "iqual/iq_barrio_helper": "^2.0"
+    "iqual/iq_barrio_helper": "^3.0"
   }
 }
