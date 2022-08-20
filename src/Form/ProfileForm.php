@@ -11,6 +11,13 @@ use Drupal\Core\Form\FormStateInterface;
 class ProfileForm extends EntityForm {
 
   /**
+   * Undocumented variable.
+   *
+   * @var bool
+   */
+  public static $saving = FALSE;
+
+  /**
    * {@inheritdoc}
    */
   public function form(array $form, FormStateInterface $form_state) {
@@ -56,55 +63,28 @@ class ProfileForm extends EntityForm {
    * {@inheritdoc}
    */
   public function save(array $form, FormStateInterface $form_state) {
+    self::$saving = TRUE;
     $profile = $this->entity;
 
     // Prevent leading and trailing spaces.
     $profile->set('label', trim($form_state->getValue('label')));
     $profile->set('id', $form_state->getValue('id'));
 
+    // Save styles to config.
     $styles = $form_state->getValues();
     unset($styles['id']);
     unset($styles['label']);
-
     $profile->set('styles', $styles);
-
     $status = $profile->save();
 
-    // Clone stylesheets from custom themes.
-    $themes = [
-      $_SERVER["DOCUMENT_ROOT"] . '/themes/custom/iq_barrio',
-      $_SERVER["DOCUMENT_ROOT"] . '/themes/custom/iq_custom',
-    ];
-
-    foreach ($themes as $theme) {
-      $themeFiles = array_keys(iterator_to_array(new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($theme))));
-      foreach ($themeFiles as $filename) {
-        if (in_array(pathinfo($filename, PATHINFO_EXTENSION), ['scss', 'ini', 'rb'])) {
-          $fileDest = str_replace('/themes/custom', '/sites/default/files/styling_profiles/' . $form_state->getValue('id'), $filename);
-          $path = pathinfo($fileDest);
-          if (!file_exists($path['dirname'])) {
-            mkdir($path['dirname'], 0755, TRUE);
-          }
-          copy($filename, $fileDest);
-        }
-      }
-    }
-
-    foreach ($styles as $stylingKey => $stylingValaue) {
-      if ((strpos($stylingKey, 'opacity') !== FALSE) && empty($stylingValaue)) {
-        $styles[$stylingKey] = 1;
-      }
-    }
-
-    $definitionContent = file_get_contents($_SERVER["DOCUMENT_ROOT"] . '/themes/custom/iq_barrio/resources/sass/_template.scss.txt');
-    $definitionContent = preg_replace_callback('/\{{(\w+)}}/', function ($match) use ($styles) {
-      $matched = $match[0];
-      $name = $match[1];
-      return isset($styles[$name]) ? $styles[$name] : $matched;
-    }, $definitionContent);
-
-    $service = \Drupal::service('iq_barrio_helper.iq_barrio_service');
-    $service->writeDefinitionsFile($styles, $_SERVER["DOCUMENT_ROOT"] . '/sites/default/files/styling_profiles/' . $form_state->getValue('id') . '/iq_barrio/resources/sass/_definitions.scss', $_SERVER["DOCUMENT_ROOT"] . '/themes/custom/iq_barrio/resources/sass/_template.scss.txt');
+    // Prepare and compile scss files.
+    $sassManager = \Drupal::service('styling_profile.service.sass_manager');
+    $sassManager->provideSass($profile);
+    $sassManager->writeDefinitionsFile(
+      $styles,
+      \Drupal::root() . '/sites/default/files/styling_profiles/' . $profile->id() . '/iq_barrio/resources/sass/_definitions.scss',
+      \Drupal::root() . '/themes/custom/iq_barrio/resources/sass/_template.scss.txt'
+    );
 
     // Tell the user we've updated the profile.
     $action = $status == SAVED_UPDATED ? 'updated' : 'added';
@@ -117,6 +97,7 @@ class ProfileForm extends EntityForm {
     if ($form_state->getValue('reset_css')) {
       $service->resetCSS();
     }
+    self::$saving = FALSE;
   }
 
   /**
