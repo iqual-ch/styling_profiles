@@ -61,7 +61,6 @@ class ProfileForm extends EntityForm {
    * {@inheritdoc}
    */
   public function save(array $form, FormStateInterface $form_state) {
-    self::$saving = TRUE;
     $profile = $this->entity;
 
     // Prevent leading and trailing spaces.
@@ -90,7 +89,6 @@ class ProfileForm extends EntityForm {
     if ($form_state->getValue('reset_css')) {
       $service->resetCSS();
     }
-    self::$saving = FALSE;
   }
 
   /**
