@@ -15,8 +15,6 @@ class ProfileForm extends EntityForm {
    *
    * @var bool
    */
-  public static $saving = FALSE;
-
   /**
    * {@inheritdoc}
    */
@@ -77,14 +75,9 @@ class ProfileForm extends EntityForm {
     $profile->set('styles', $styles);
     $status = $profile->save();
 
-    // Prepare and compile scss files.
-    $sassManager = \Drupal::service('styling_profile.service.sass_manager');
-    $sassManager->provideSass($profile);
-    $sassManager->writeDefinitionsFile(
-      $styles,
-      \Drupal::root() . '/sites/default/files/styling_profiles/' . $profile->id() . '/iq_barrio/resources/sass/_definitions.scss',
-      \Drupal::root() . '/themes/custom/iq_barrio/resources/sass/_template.scss.txt'
-    );
+    // Trigger compilation.
+    // @see styling_profiles_iq_scss_compiler_pre_compile
+    \Drupal::service('iq_scss_compiler.compilation_service')->compile();
 
     // Tell the user we've updated the profile.
     $action = $status == SAVED_UPDATED ? 'updated' : 'added';
