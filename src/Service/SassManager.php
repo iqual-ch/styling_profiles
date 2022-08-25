@@ -18,16 +18,17 @@ class SassManager {
   protected $barrioService = NULL;
 
   /**
-   * Undocumented function.
+   * Creates a new SassManager.
    *
    * @param \Drupal\iq_barrio_helper\Service\iqBarrioService $barrioService
+   *   The barrio helper service.
    */
   public function __construct(iqBarrioService $barrioService) {
     $this->barrioService = $barrioService;
   }
 
   /**
-   * Undocumented function.
+   * Copy the themes sass files for the given profile.
    *
    * @param \Drupal\styling_profiles\Entity\StylingProfile $profile
    *
@@ -58,14 +59,20 @@ class SassManager {
   }
 
   /**
+   * Write the definitions file for the profile.
    *
+   * @param StylingProfile $profile
+   *   The profile to write the file for.
    */
-  public function writeDefinitionsFile($stylingValues, $pathDefinitionTarget, $pathDefinitionSource = NULL) {
+  public function writeDefinitionsFile(StylingProfile $profile) {
+    $stylingValues = $profile->get('styles');
+    $pathDefinitionTarget = \Drupal::root() . '/sites/default/files/styling_profiles/' . $profile->id() . '/iq_barrio/resources/sass/_definitions.scss';
+    $pathDefinitionSource = \Drupal::root() . '/themes/custom/iq_barrio/resources/sass/_template.scss.txt';
+
     $this->barrioService->writeDefinitionsFile(
-          $stylingValues,
-    $pathDefinitionTarget,
-    $pathDefinitionSource
+      $stylingValues,
+      $pathDefinitionTarget,
+      $pathDefinitionSource
     );
   }
-
 }
