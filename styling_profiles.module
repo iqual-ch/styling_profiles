@@ -5,7 +5,7 @@
  */
 
 use Drupal\Core\Asset\AttachedAssetsInterface;
-use Drupal\node\NodeInterface;
+use Drupal\styling_profiles\Form\ProfileForm;
 
 /**
  *
@@ -45,4 +45,21 @@ function styling_profiles_css_alter(&$css, AttachedAssetsInterface $assets) {
     }
   }
   $css = $cssAltered;
+}
+
+/**
+ * Implements hook_iq_scss_compiler_post_compile.
+ */
+function styling_profiles_iq_scss_compiler_pre_compile($compilationService)
+{
+  // Add styling profile directory for compilation.
+  $compilationService->addSource(\Drupal::root() . '/sites/default/files/styling_profiles');
+
+  // Prepare sass and defintion file for each profile.
+  $profiles = \Drupal::entityTypeManager()->getStorage('styling_profile')->loadMultiple();
+  foreach ($profiles as $profile) {
+    $sassManager = \Drupal::service('styling_profile.service.sass_manager');
+    $sassManager->provideSass($profile);
+    $sassManager->writeDefinitionsFile($profile);
+  }
 }
