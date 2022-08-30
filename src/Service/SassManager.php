@@ -69,7 +69,7 @@ class SassManager {
     $pathDefinitionTarget = \Drupal::root() . '/sites/default/files/styling_profiles/' . $profile->id() . '/iq_barrio/resources/sass/_definitions.scss';
     $pathDefinitionSource = \Drupal::root() . '/themes/custom/iq_barrio/resources/sass/_template.scss.txt';
 
-    if (empty($stylingValues)) {
+    if (!empty($stylingValues)) {
       $this->barrioService->writeDefinitionsFile(
         $stylingValues,
         $pathDefinitionTarget,
