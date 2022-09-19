@@ -18,7 +18,7 @@ class ProfileDeleteForm extends EntityDeleteForm {
 
     // Delete profile in filesystem
     $profilePath = $_SERVER["DOCUMENT_ROOT"].'/sites/default/files/styling_profiles/'.$this->entity->id();
-    file_unmanaged_delete_recursive( $profilePath );
+    \Drupal::service('file_system')->deleteRecursive( $profilePath );
 
     $this->entity->delete();
     $this->messenger()->addMessage($this->t('Profile %label has been deleted.', array('%label' => $this->entity->label())));
