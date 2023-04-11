@@ -15,6 +15,7 @@ class ProfileForm extends EntityForm {
    *
    * @var bool
    */
+
   /**
    * {@inheritdoc}
    */
@@ -61,6 +62,7 @@ class ProfileForm extends EntityForm {
    * {@inheritdoc}
    */
   public function save(array $form, FormStateInterface $form_state) {
+    $service = NULL;
     $profile = $this->entity;
 
     // Prevent leading and trailing spaces.

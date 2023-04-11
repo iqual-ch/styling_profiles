@@ -23,8 +23,10 @@ class NodeProfileHandler extends DefaultHandler {
     $node = \Drupal::routeMatch()->getParameter('node');
     if ($node instanceof NodeInterface && $node->field_styling_profile && $node->field_styling_profile->target_id) {
       return $node->field_styling_profile->target_id;
-    }else{
+    }
+    else {
       return $profile;
     }
   }
+
 }

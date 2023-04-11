@@ -1,6 +1,10 @@
 <?php
+
 namespace Drupal\styling_profiles\Service;
 
+use Drupal\styling_profiles\Plugin\styling_profiles\HandlerPluginInterface;
+use Drupal\styling_profiles\Annotation\StylingProfilesHandler;
+use Drupal\Component\Utility\SortArray;
 use Drupal\Component\Plugin\FallbackPluginManagerInterface;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
@@ -31,8 +35,8 @@ class RuleHandlerManager extends DefaultPluginManager implements FallbackPluginM
           'Plugin/styling_profiles/Handler',
           $namespaces,
           $module_handler,
-          'Drupal\styling_profiles\Plugin\styling_profiles\HandlerPluginInterface',
-          'Drupal\styling_profiles\Annotation\StylingProfilesHandler'
+          HandlerPluginInterface::class,
+          StylingProfilesHandler::class
       );
     $this->alterInfo('styling_profiles_handler_info');
     $this->setCacheBackend($cache_backend, 'styling_profiles_handler_info_plugins');
@@ -47,14 +51,14 @@ class RuleHandlerManager extends DefaultPluginManager implements FallbackPluginM
   public function getHandlers() {
     $handlers = [];
     $definitions = $this->getDefinitions();
-    uasort($definitions, ['\Drupal\Component\Utility\SortArray', 'sortByWeightElement']);
+    uasort($definitions, ['\\' . SortArray::class, 'sortByWeightElement']);
     foreach ($definitions as $definition) {
       $handlers[] = $this->getFactory()->createInstance($definition['id']);
     }
     return $handlers;
   }
 
-    /**
+  /**
    * Get current styling profile.
    *
    * @return \Drupal\styling_profiles\Plugin\styling_profiles\HandlerPluginInterface[]
@@ -63,7 +67,7 @@ class RuleHandlerManager extends DefaultPluginManager implements FallbackPluginM
   public function getStylingProfile() {
     $handlers = $this->getHandlers();
     $profile = '';
-    foreach($handlers as $handler) {
+    foreach ($handlers as $handler) {
       $profile = $handler->getProfile($profile);
     }
     return $profile;

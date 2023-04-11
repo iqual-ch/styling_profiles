@@ -5,7 +5,6 @@
  */
 
 use Drupal\Core\Asset\AttachedAssetsInterface;
-use Drupal\styling_profiles\Form\ProfileForm;
 
 /**
  *
@@ -50,8 +49,7 @@ function styling_profiles_css_alter(&$css, AttachedAssetsInterface $assets) {
 /**
  * Implements hook_iq_scss_compiler_post_compile.
  */
-function styling_profiles_iq_scss_compiler_pre_compile($compilationService)
-{
+function styling_profiles_iq_scss_compiler_pre_compile($compilationService) {
   // Add styling profile directory for compilation.
   $compilationService->addSource(\Drupal::root() . '/sites/default/files/styling_profiles');
 

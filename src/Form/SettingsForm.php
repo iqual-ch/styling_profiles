@@ -3,7 +3,6 @@
 namespace Drupal\styling_profiles\Form;
 
 use Drupal\Core\Form\ConfigFormBase;
-use Drupal\Core\Form\FormStateInterface;
 
 /**
  * Defines the Google tag manager module and default container settings form.

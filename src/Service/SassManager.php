@@ -61,7 +61,7 @@ class SassManager {
   /**
    * Write the definitions file for the profile.
    *
-   * @param StylingProfile $profile
+   * @param \Drupal\styling_profiles\Entity\StylingProfile $profile
    *   The profile to write the file for.
    */
   public function writeDefinitionsFile(StylingProfile $profile) {
@@ -77,4 +77,5 @@ class SassManager {
       );
     }
   }
+
 }
