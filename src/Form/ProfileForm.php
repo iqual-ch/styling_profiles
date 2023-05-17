@@ -89,7 +89,7 @@ class ProfileForm extends EntityForm {
     $form_state->setRedirect('entity.styling_profile.collection');
 
     if ($form_state->getValue('reset_css')) {
-      $service->resetCSS();
+      $service->resetCss();
     }
   }
 
