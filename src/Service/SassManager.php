@@ -6,7 +6,7 @@ use Drupal\iq_barrio_helper\Service\iqBarrioService;
 use Drupal\styling_profiles\Entity\StylingProfile;
 
 /**
- *
+ * Sass Manager class.
  */
 class SassManager {
 
@@ -31,8 +31,10 @@ class SassManager {
    * Copy the themes sass files for the given profile.
    *
    * @param \Drupal\styling_profiles\Entity\StylingProfile $profile
+   *   Profile.
    *
    * @return void
+   *   Return void.
    */
   public function provideSass(StylingProfile $profile) {
     $id = $profile->get('id');

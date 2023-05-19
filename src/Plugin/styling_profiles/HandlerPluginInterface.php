@@ -3,7 +3,7 @@
 namespace Drupal\styling_profiles\Plugin\styling_profiles;
 
 /**
- *
+ * Handler Plugin Interface.
  */
 interface HandlerPluginInterface {
 

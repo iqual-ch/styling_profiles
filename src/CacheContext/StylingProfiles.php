@@ -6,12 +6,12 @@ use Drupal\Core\Cache\Context\CacheContextInterface;
 use Drupal\Core\Cache\CacheableMetadata;
 
 /**
- *
+ * Styling Profiles class.
  */
 class StylingProfiles implements CacheContextInterface {
 
   /**
-   *
+   * The class constructor.
    */
   public function __construct() {
 

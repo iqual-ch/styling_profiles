@@ -2,12 +2,13 @@
 
 /**
  * @file
+ * This is the Styling profiles .module file.
  */
 
 use Drupal\Core\Asset\AttachedAssetsInterface;
 
 /**
- *
+ * Implements hook_entity_view_alter().
  */
 function styling_profiles_entity_view_alter(&$variables) {
   $variables['#cache']['contexts'][] = 'styling_profiles';
@@ -47,7 +48,7 @@ function styling_profiles_css_alter(&$css, AttachedAssetsInterface $assets) {
 }
 
 /**
- * Implements hook_iq_scss_compiler_post_compile.
+ * Implements hook_iq_scss_compiler_post_compile().
  */
 function styling_profiles_iq_scss_compiler_pre_compile($compilationService) {
   // Add styling profile directory for compilation.

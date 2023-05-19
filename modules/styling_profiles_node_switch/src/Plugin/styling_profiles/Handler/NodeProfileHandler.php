@@ -17,7 +17,7 @@ use Drupal\node\NodeInterface;
 class NodeProfileHandler extends DefaultHandler {
 
   /**
-   *
+   * Get Profile.
    */
   public function getProfile(string $profile) {
     $node = \Drupal::routeMatch()->getParameter('node');
