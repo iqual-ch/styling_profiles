@@ -2,8 +2,13 @@
 
 namespace Drupal\styling_profiles\Form;
 
+use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Entity\EntityForm;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Messenger\MessengerInterface;
+use Drupal\iq_barrio_helper\Service\IqBarrioService;
+use Drupal\iq_scss_compiler\Service\CompilationService;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Defines the styling profile settings form.
@@ -11,10 +16,63 @@ use Drupal\Core\Form\FormStateInterface;
 class ProfileForm extends EntityForm {
 
   /**
-   * Undocumented variable.
+   * Iq barrio service.
    *
-   * @var bool
+   * @var Drupal\iq_barrio_helper\Service\IqBarrioService
    */
+  protected $iqBarrioService;
+
+  /**
+   * The compilation service.
+   *
+   * @var \Drupal\iq_scss_compiler\Service\CompilationService
+   */
+  protected $compilationService;
+
+  /**
+   * The messenger.
+   *
+   * @var \Drupal\Core\Messenger\MessengerInterface
+   */
+  protected $messenger;
+
+  /**
+   * The config factory.
+   *
+   * @var \Drupal\Core\Config\ConfigFactoryInterface
+   */
+  protected $config;
+
+  /**
+   * Constructs a ProfileForm object.
+   *
+   * @param \Drupal\iq_barrio_helper\Service\IqBarrioService $iq_barrio_service
+   *   The entity repository service.
+   * @param \Drupal\iq_scss_compiler\Service\CompilationService $compilation_service
+   *   The compilation service.
+   * @param \Drupal\Core\Messenger\MessengerInterface $messenger
+   *   The messenger.
+   * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
+   *   The config factory.
+   */
+  public function __construct(IqBarrioService $iq_barrio_service, CompilationService $compilation_service, MessengerInterface $messenger, ConfigFactoryInterface $config_factory) {
+    $this->iqBarrioService = $iq_barrio_service;
+    $this->compilationService = $compilation_service;
+    $this->messenger = $messenger;
+    $this->config = $config_factory;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container) {
+    return new static(
+      $container->get('iq_barrio_helper.iq_barrio_service'),
+      $container->get('iq_scss_compiler.compilation_service'),
+      $container->get('messenger'),
+      $container->get('config.factory')
+    );
+  }
 
   /**
    * {@inheritdoc}
@@ -50,11 +108,10 @@ class ProfileForm extends EntityForm {
       $styleSettings = $profile->get('styles');
     }
     else {
-      $styleSettings = \Drupal::config('iq_barrio.settings')->get();
+      $styleSettings = $this->config->get('iq_barrio.settings')->get();
     }
 
-    $service = \Drupal::service('iq_barrio_helper.iq_barrio_service');
-    $service->alterThemeSettingsForm($form, $styleSettings);
+    $this->iqBarrioService->alterThemeSettingsForm($form, $styleSettings);
     return $form;
   }
 
@@ -78,11 +135,11 @@ class ProfileForm extends EntityForm {
 
     // Trigger compilation.
     // @see styling_profiles_iq_scss_compiler_pre_compile
-    \Drupal::service('iq_scss_compiler.compilation_service')->compile();
+    $this->compilationService->compile();
 
     // Tell the user we've updated the profile.
     $action = $status == SAVED_UPDATED ? 'updated' : 'added';
-    \Drupal::messenger()->addStatus($this->t(
+    $this->messenger()->addStatus($this->t(
       'Profile %label has been %action.',
       ['%label' => $profile->label(), '%action' => $action]
     ));
