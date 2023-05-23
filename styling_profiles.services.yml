@@ -1,7 +1,7 @@
 services:
   cache_context.styling_profiles:
     class: Drupal\styling_profiles\CacheContext\StylingProfiles
-    arguments: []
+    arguments: ['@styling_profile.service.rule_handler_manager']
     tags:
       - { name: cache.context }
   styling_profile.service.sass_manager:

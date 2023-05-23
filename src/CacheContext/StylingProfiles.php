@@ -4,6 +4,7 @@ namespace Drupal\styling_profiles\CacheContext;
 
 use Drupal\Core\Cache\Context\CacheContextInterface;
 use Drupal\Core\Cache\CacheableMetadata;
+use Drupal\styling_profiles\Service\RuleHandlerManager;
 
 /**
  * Styling Profiles class.
@@ -11,10 +12,20 @@ use Drupal\Core\Cache\CacheableMetadata;
 class StylingProfiles implements CacheContextInterface {
 
   /**
-   * The class constructor.
+   * Rule Handler Manager.
+   *
+   * @var Drupal\styling_profiles\Service\RuleHandlerManager
    */
-  public function __construct() {
+  protected $ruleHandlerManager;
 
+  /**
+   * The class constructor.
+   *
+   * @param Drupal\styling_profiles\Service\RuleHandlerManager $rule_handler_manager
+   *   The rule handler manager.
+   */
+  public function __construct(RuleHandlerManager $rule_handler_manager) {
+    $this->ruleHandlerManager = $rule_handler_manager;
   }
 
   /**
@@ -28,8 +39,7 @@ class StylingProfiles implements CacheContextInterface {
    * {@inheritdoc}
    */
   public function getContext() {
-    $styleProfileRuleHandlerManager = \Drupal::service('styling_profile.service.rule_handler_manager');
-    return $styleProfileRuleHandlerManager->getStylingProfile();
+    return $this->ruleHandlerManager->getStylingProfile();
   }
 
   /**
