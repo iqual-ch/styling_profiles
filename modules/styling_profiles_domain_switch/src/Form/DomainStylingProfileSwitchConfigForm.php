@@ -2,6 +2,8 @@
 
 namespace Drupal\styling_profiles_domain_switch\Form;
 
+use Drupal\Core\Config\ConfigFactoryInterface;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -14,6 +16,26 @@ use Drupal\Core\Link;
 class DomainStylingProfileSwitchConfigForm extends ConfigFormBase {
 
   /**
+   * The entity type manager.
+   *
+   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
+   */
+  protected $entityTypeManager;
+
+  /**
+   * Constructs a DomainStylingProfileSwitchConfigForm object.
+   *
+   * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
+   *   The factory for configuration objects.
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
+   *   The entity type manager.
+   */
+  public function __construct(ConfigFactoryInterface $config_factory, EntityTypeManagerInterface $entity_type_manager) {
+    parent::__construct($config_factory);
+    $this->entityTypeManager = $entity_type_manager;
+  }
+
+  /**
    * Create function return static domain loader configuration.
    *
    * @param \Symfony\Component\DependencyInjection\ContainerInterface $container
@@ -24,7 +46,8 @@ class DomainStylingProfileSwitchConfigForm extends ConfigFormBase {
    */
   public static function create(ContainerInterface $container) {
     return new static(
-        $container->get('config.factory')
+        $container->get('config.factory'),
+        $container->get('entity_type.manager')
     );
   }
 
@@ -37,7 +60,7 @@ class DomainStylingProfileSwitchConfigForm extends ConfigFormBase {
   public function getProfilesList() {
     $stylingProfiles = [];
     $stylingProfiles['_none'] = $this->t('None');
-    foreach (\Drupal::entityTypeManager()->getStorage('styling_profile')->loadMultiple() as $profileKey => $profileData) {
+    foreach ($this->entityTypeManager->getStorage('styling_profile')->loadMultiple() as $profileKey => $profileData) {
       $stylingProfiles[$profileKey] = $profileData->label;
     }
     return $stylingProfiles;
@@ -64,7 +87,7 @@ class DomainStylingProfileSwitchConfigForm extends ConfigFormBase {
     $config = $this->config('styling_profiles_domain_switch.settings');
 
     $profileNames = $this->getProfilesList();
-    $domains = \Drupal::entityTypeManager()->getStorage('domain')->loadMultiple();
+    $domains = $this->entityTypeManager->getStorage('domain')->loadMultiple();
     foreach ($domains as $domain) {
       $domainId = $domain->id();
       $hostname = $domain->get('name');
@@ -95,7 +118,7 @@ class DomainStylingProfileSwitchConfigForm extends ConfigFormBase {
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
     parent::submitForm($form, $form_state);
-    $domains = \Drupal::entityTypeManager()->getStorage('domain')->loadMultiple();
+    $domains = $this->entityTypeManager->getStorage('domain')->loadMultiple();
     $config = $this->config('styling_profiles_domain_switch.settings');
     foreach ($domains as $domain) {
       $domainId = $domain->id();
