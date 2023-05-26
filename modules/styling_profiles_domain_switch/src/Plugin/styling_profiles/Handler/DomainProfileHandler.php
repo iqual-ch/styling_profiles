@@ -16,7 +16,7 @@ use Drupal\styling_profiles\Plugin\styling_profiles\Handler\DefaultHandler;
 class DomainProfileHandler extends DefaultHandler {
 
   /**
-   *
+   * Get Profile.
    */
   public function getProfile(string $profile) {
     $config = \Drupal::config('styling_profiles_domain_switch.settings');

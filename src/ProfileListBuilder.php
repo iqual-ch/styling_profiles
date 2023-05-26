@@ -16,6 +16,7 @@ class ProfileListBuilder extends ConfigEntityListBuilder {
    * {@inheritdoc}
    */
   public function buildHeader() {
+    $header = [];
     $header['label'] = t('Label');
     $header['id'] = t('Machine name');
     return $header + parent::buildHeader();
@@ -25,6 +26,7 @@ class ProfileListBuilder extends ConfigEntityListBuilder {
    * {@inheritdoc}
    */
   public function buildRow(EntityInterface $entity) {
+    $row = [];
     $row['label'] = $entity->label();
     $row['id'] = $entity->id();
     return $row + parent::buildRow($entity);
