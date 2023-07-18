@@ -2,8 +2,8 @@
 
 namespace Drupal\styling_profiles_node_switch\Plugin\styling_profiles\Handler;
 
-use Drupal\styling_profiles\Plugin\styling_profiles\Handler\DefaultHandler;
 use Drupal\node\NodeInterface;
+use Drupal\styling_profiles\Plugin\styling_profiles\Handler\DefaultHandler;
 
 /**
  * Process profile selection with node switch.

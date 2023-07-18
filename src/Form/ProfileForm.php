@@ -123,7 +123,7 @@ class ProfileForm extends EntityForm {
     $profile = $this->entity;
 
     // Prevent leading and trailing spaces.
-    $profile->set('label', trim($form_state->getValue('label')));
+    $profile->set('label', trim((string) $form_state->getValue('label')));
     $profile->set('id', $form_state->getValue('id'));
 
     // Save styles to config.
