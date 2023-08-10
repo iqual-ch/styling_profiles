@@ -4,6 +4,7 @@ namespace Drupal\styling_profiles;
 
 use Drupal\Core\Config\Entity\ConfigEntityListBuilder;
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\StringTranslation\StringTranslationTrait;
 
 /**
  * Defines a listing of container configuration entities.
@@ -11,14 +12,15 @@ use Drupal\Core\Entity\EntityInterface;
  * @see \Drupal\styling_profiles\Entity\Container
  */
 class ProfileListBuilder extends ConfigEntityListBuilder {
+  use StringTranslationTrait;
 
   /**
    * {@inheritdoc}
    */
   public function buildHeader() {
     $header = [];
-    $header['label'] = t('Label');
-    $header['id'] = t('Machine name');
+    $header['label'] = $this->t('Label');
+    $header['id'] = $this->t('Machine name');
     return $header + parent::buildHeader();
   }
 
@@ -39,7 +41,7 @@ class ProfileListBuilder extends ConfigEntityListBuilder {
     $operations = parent::getDefaultOperations($entity);
     if ($entity->hasLinkTemplate('edit-form')) {
       $operations['edit'] = [
-        'title' => t('Edit profile'),
+        'title' => $this->t('Edit profile'),
         'weight' => 20,
         'url' => $entity->toUrl('edit-form'),
       ];
