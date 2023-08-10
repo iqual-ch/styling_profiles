@@ -2,7 +2,7 @@ name: Styling Profiles Domain Switch
 description: 'Styling profile switch for different domains'
 type: module
 package: Styling
-core_version_requirement: ^8.8 || ^9
+core_version_requirement: ^8.8 || ^9 || ^10
 dependencies:
   - domain:domain
   - styling_profiles:styling_profiles
