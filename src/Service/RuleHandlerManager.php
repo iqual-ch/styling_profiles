@@ -2,13 +2,13 @@
 
 namespace Drupal\styling_profiles\Service;
 
-use Drupal\styling_profiles\Plugin\styling_profiles\HandlerPluginInterface;
-use Drupal\styling_profiles\Annotation\StylingProfilesHandler;
-use Drupal\Component\Utility\SortArray;
 use Drupal\Component\Plugin\FallbackPluginManagerInterface;
+use Drupal\Component\Utility\SortArray;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Plugin\DefaultPluginManager;
+use Drupal\styling_profiles\Annotation\StylingProfilesHandler;
+use Drupal\styling_profiles\Plugin\styling_profiles\HandlerPluginInterface;
 
 /**
  * Handler manager for style profile handlers.

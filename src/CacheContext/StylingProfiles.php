@@ -2,8 +2,8 @@
 
 namespace Drupal\styling_profiles\CacheContext;
 
-use Drupal\Core\Cache\Context\CacheContextInterface;
 use Drupal\Core\Cache\CacheableMetadata;
+use Drupal\Core\Cache\Context\CacheContextInterface;
 use Drupal\styling_profiles\Service\RuleHandlerManager;
 
 /**

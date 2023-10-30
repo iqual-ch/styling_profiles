@@ -11,7 +11,7 @@
     "source": "https://github.com/iqual-ch/styling_profiles"
   },
   "require": {
-    "iqual/iq_barrio_helper": "^3.0",
+    "iqual/iq_barrio_helper": "^4.0",
     "php": "^8.1",
     "drupal/core": "^9.5 || ^10"
   }
