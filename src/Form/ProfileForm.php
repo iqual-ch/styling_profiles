@@ -16,50 +16,23 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class ProfileForm extends EntityForm {
 
   /**
-   * Iq barrio service.
-   *
-   * @var Drupal\iq_barrio_helper\Service\IqBarrioService
-   */
-  protected $iqBarrioService;
-
-  /**
-   * The compilation service.
-   *
-   * @var \Drupal\iq_scss_compiler\Service\CompilationService
-   */
-  protected $compilationService;
-
-  /**
-   * The messenger.
-   *
-   * @var \Drupal\Core\Messenger\MessengerInterface
-   */
-  protected $messenger;
-
-  /**
-   * The config factory.
-   *
-   * @var \Drupal\Core\Config\ConfigFactoryInterface
-   */
-  protected $config;
-
-  /**
    * Constructs a ProfileForm object.
    *
-   * @param \Drupal\iq_barrio_helper\Service\IqBarrioService $iq_barrio_service
+   * @param \Drupal\iq_barrio_helper\Service\IqBarrioService $iqBarrioService
    *   The entity repository service.
-   * @param \Drupal\iq_scss_compiler\Service\CompilationService $compilation_service
+   * @param \Drupal\iq_scss_compiler\Service\CompilationService $compilationService
    *   The compilation service.
    * @param \Drupal\Core\Messenger\MessengerInterface $messenger
    *   The messenger.
-   * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
+   * @param \Drupal\Core\Config\ConfigFactoryInterface $config
    *   The config factory.
    */
-  public function __construct(IqBarrioService $iq_barrio_service, CompilationService $compilation_service, MessengerInterface $messenger, ConfigFactoryInterface $config_factory) {
-    $this->iqBarrioService = $iq_barrio_service;
-    $this->compilationService = $compilation_service;
-    $this->messenger = $messenger;
-    $this->config = $config_factory;
+  public function __construct(
+  protected IqBarrioService $iqBarrioService,
+  protected CompilationService $compilationService,
+  protected MessengerInterface $messenger,
+  protected ConfigFactoryInterface $config
+  ) {
   }
 
   /**
@@ -79,6 +52,7 @@ class ProfileForm extends EntityForm {
    */
   public function form(array $form, FormStateInterface $form_state) {
     $form = parent::form($form, $form_state);
+    /** @var \Drupal\styling_profiles\Entity\StylingProfile $profile */
     $profile = $this->entity;
 
     $form['label'] = [
@@ -119,7 +93,7 @@ class ProfileForm extends EntityForm {
    * {@inheritdoc}
    */
   public function save(array $form, FormStateInterface $form_state) {
-    $service = NULL;
+    /** @var \Drupal\styling_profiles\Entity\StylingProfile $profile */
     $profile = $this->entity;
 
     // Prevent leading and trailing spaces.
@@ -153,7 +127,7 @@ class ProfileForm extends EntityForm {
     $form_state->setRedirect('entity.styling_profile.collection');
 
     if ($form_state->getValue('reset_css')) {
-      $service->resetCss();
+      $this->iqBarrioService->resetCss();
     }
   }
 
@@ -175,6 +149,7 @@ class ProfileForm extends EntityForm {
     $profile = $form_state->getFormObject()->getEntity();
     return (bool) $this->entityTypeManager->getStorage($profile->getEntityTypeId())
       ->getQuery()
+      ->accessCheck(FALSE)
       ->condition($profile->getEntityType()->getKey('id'), $value)
       ->execute();
   }
