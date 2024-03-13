@@ -30,7 +30,6 @@ class ProfileForm extends EntityForm {
   public function __construct(
   protected IqBarrioService $iqBarrioService,
   protected CompilationService $compilationService,
-  protected MessengerInterface $messenger,
   protected ConfigFactoryInterface $config
   ) {
   }
@@ -42,7 +41,6 @@ class ProfileForm extends EntityForm {
     return new static(
       $container->get('iq_barrio_helper.iq_barrio_service'),
       $container->get('iq_scss_compiler.compilation_service'),
-      $container->get('messenger'),
       $container->get('config.factory')
     );
   }
