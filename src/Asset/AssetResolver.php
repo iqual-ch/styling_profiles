@@ -12,9 +12,9 @@ use Drupal\Core\Asset\LibraryDependencyResolverInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Theme\ThemeManagerInterface;
 use Drupal\Core\Language\LanguageManagerInterface;
+use Drupal\Core\Asset\CssCollectionOptimizerLazy;
 use Drupal\Core\Extension\ThemeHandlerInterface;
-use Drupal\styling_profiles\Service\RuleHandlerManagerInterface;
-use Drupal\Core\Asset\CssCollectionOptimizerInterface;
+use Drupal\styling_profiles\Service\RuleHandlerManager;
 
 /**
  * Custom Asset Resolver class dependent on the styling profile.
@@ -52,12 +52,22 @@ class AssetResolver extends CoreAssetResolver {
    *   The cache backend.
    * @param \Drupal\Core\Extension\ThemeHandlerInterface $theme_handler
    *   The theme handler service.
-   * @param \Drupal\styling_profiles\Service\RuleHandlerManagerInterface $style_profile_rule_handler_manager
+   * @param \Drupal\styling_profiles\Service\RuleHandlerManager $style_profile_rule_handler_manager
    *   The styling profile rule handler manager.
-   * @param \Drupal\Core\Asset\CssCollectionOptimizerInterface $css_collection_optimizer
+   * @param \Drupal\Core\Asset\CssCollectionOptimizerLazy $css_collection_optimizer
    *   The CSS collection optimizer.
    */
-  public function __construct(LibraryDiscoveryInterface $library_discovery, LibraryDependencyResolverInterface $library_dependency_resolver, ModuleHandlerInterface $module_handler, ThemeManagerInterface $theme_manager, LanguageManagerInterface $language_manager, CacheBackendInterface $cache, ThemeHandlerInterface $theme_handler, RuleHandlerManagerInterface $style_profile_rule_handler_manager, CssCollectionOptimizerInterface $css_collection_optimizer) {
+  public function __construct(
+    LibraryDiscoveryInterface $library_discovery,
+    LibraryDependencyResolverInterface $library_dependency_resolver,
+    ModuleHandlerInterface $module_handler,
+    ThemeManagerInterface $theme_manager,
+    LanguageManagerInterface $language_manager,
+    CacheBackendInterface $cache,
+    ThemeHandlerInterface $theme_handler,
+    RuleHandlerManager $style_profile_rule_handler_manager,
+    CssCollectionOptimizerLazy $css_collection_optimizer,
+  ) {
     parent::__construct($library_discovery, $library_dependency_resolver, $module_handler, $theme_manager, $language_manager, $cache, $theme_handler);
     $this->styleProfileRuleHandlerManager = $style_profile_rule_handler_manager;
     $this->cssCollectionOptimizer = $css_collection_optimizer;
