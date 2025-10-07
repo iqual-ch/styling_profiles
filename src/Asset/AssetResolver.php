@@ -13,7 +13,6 @@ use Drupal\Core\Language\LanguageInterface;
  */
 class AssetResolver extends CoreAssetResolver {
 
-
   /**
    * {@inheritdoc}
    */
@@ -55,7 +54,7 @@ class AssetResolver extends CoreAssetResolver {
       'preprocess' => TRUE,
     ];
 
-    foreach ($libraries_to_load as $key => $library) {
+    foreach ($libraries_to_load as $library) {
       [$extension, $name] = explode('/', $library, 2);
       $definition = $this->libraryDiscovery->getLibraryByName($extension, $name);
       foreach ($definition['css'] as $options) {
