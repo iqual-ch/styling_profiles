@@ -12,4 +12,12 @@ services:
     parent: default_plugin_manager
   asset.resolver:
     class: Drupal\styling_profiles\Asset\AssetResolver
-    arguments: ['@library.discovery', '@library.dependency_resolver', '@module_handler', '@theme.manager', '@language_manager', '@cache.data']
+    arguments:
+      - '@library.discovery'
+      - '@library.dependency_resolver'
+      - '@module_handler'
+      - '@theme.manager'
+      - '@language_manager'
+      - '@cache.data'
+      - '@styling_profile.service.rule_handler_manager'
+      - '@asset.css.collection_optimizer'
