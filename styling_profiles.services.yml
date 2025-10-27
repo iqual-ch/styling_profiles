@@ -10,3 +10,15 @@ services:
   styling_profile.service.rule_handler_manager:
     class: Drupal\styling_profiles\Service\RuleHandlerManager
     parent: default_plugin_manager
+  asset.resolver:
+    class: Drupal\styling_profiles\Asset\AssetResolver
+    arguments:
+      - '@library.discovery'
+      - '@library.dependency_resolver'
+      - '@module_handler'
+      - '@theme.manager'
+      - '@language_manager'
+      - '@cache.asset_chain'
+      - '@theme_handler'
+      - '@styling_profile.service.rule_handler_manager'
+      - '@asset.css.collection_optimizer'
