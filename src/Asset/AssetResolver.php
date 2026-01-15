@@ -77,6 +77,13 @@ class AssetResolver extends CoreAssetResolver {
    * {@inheritdoc}
    */
   public function getCssAssets(AttachedAssetsInterface $assets, $optimize, ?LanguageInterface $language = NULL) {
+    // Check if we're on an admin route and bypass custom logic
+    $route = \Drupal::routeMatch()->getRouteObject();
+    if ($route && \Drupal::service('router.admin_context')->isAdminRoute($route)) {
+        // Use parent implementation for admin routes
+        return parent::getCssAssets($assets, $optimize, $language);
+    }
+
     if (!$assets->getLibraries()) {
       return [];
     }
