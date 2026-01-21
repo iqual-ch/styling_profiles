@@ -20,6 +20,8 @@ services:
       - '@original_asset_resolver'
       - '@styling_profile.service.rule_handler_manager'
       - '@asset.css.collection_optimizer'
+      - '@current_route_match'
+      - '@router.admin_context'
       - '@library.discovery'
       - '@library.dependency_resolver'
       - '@module_handler'

@@ -14,6 +14,8 @@ use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Extension\ThemeHandlerInterface;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Language\LanguageManagerInterface;
+use Drupal\Core\Routing\AdminContext;
+use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Theme\ThemeManagerInterface;
 use Drupal\styling_profiles\Service\RuleHandlerManager;
 
@@ -31,11 +33,31 @@ class AssetResolverDecorator extends AssetResolver {
    *   The styling profile rule handler manager.
    * @param \Drupal\Core\Asset\CssCollectionOptimizerLazy $cssCollectionOptimizer
    *   The CSS collection optimizer.
+   * @param \Drupal\Core\Routing\RouteMatchInterface $routeMatch
+   *   The route match service.
+   * @param \Drupal\Core\Routing\AdminContext $adminContext
+   *   The admin context service.
+   * @param \Drupal\Core\Asset\LibraryDiscoveryInterface $library_discovery
+   *   The library discovery service.
+   * @param \Drupal\Core\Asset\LibraryDependencyResolverInterface $library_dependency_resolver
+   *   The library dependency resolver service.
+   * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
+   *   The module handler.
+   * @param \Drupal\Core\Theme\ThemeManagerInterface $theme_manager
+   *   The theme manager.
+   * @param \Drupal\Core\Language\LanguageManagerInterface $language_manager
+   *   The language manager.
+   * @param \Drupal\Core\Cache\CacheBackendInterface $cache
+   *   The cache backend.
+   * @param \Drupal\Core\Extension\ThemeHandlerInterface|null $theme_handler
+   *   The theme handler.
    */
   public function __construct(
     protected AssetResolverInterface $innerAssetResolver,
     protected RuleHandlerManager $styleProfileRuleHandlerManager,
     protected CssCollectionOptimizerLazy $cssCollectionOptimizer,
+    protected RouteMatchInterface $routeMatch,
+    protected AdminContext $adminContext,
     LibraryDiscoveryInterface $library_discovery,
     LibraryDependencyResolverInterface $library_dependency_resolver,
     ModuleHandlerInterface $module_handler,
@@ -59,6 +81,13 @@ class AssetResolverDecorator extends AssetResolver {
    * {@inheritdoc}
    */
   public function getCssAssets(AttachedAssetsInterface $assets, $optimize, ?LanguageInterface $language = NULL) {
+    // Check if we're on an admin route and bypass custom logic.
+    $route = $this->routeMatch->getRouteObject();
+    if ($route && $this->adminContext->isAdminRoute($route)) {
+      // Use parent implementation for admin routes.
+      return parent::getCssAssets($assets, $optimize, $language);
+    }
+
     if (!$assets->getLibraries()) {
       return [];
     }
