@@ -3,23 +3,63 @@
 namespace Drupal\styling_profiles\Asset;
 
 use Drupal\Component\Utility\Crypt;
-use Drupal\Core\Asset\AssetResolver as CoreAssetResolver;
+use Drupal\Core\Asset\AssetResolverInterface;
 use Drupal\Core\Asset\AttachedAssetsInterface;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Asset\LibraryDiscoveryInterface;
-use Drupal\Core\Asset\LibraryDependencyResolverInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Theme\ThemeManagerInterface;
 use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\Core\Asset\CssCollectionOptimizerLazy;
-use Drupal\Core\Extension\ThemeHandlerInterface;
 use Drupal\styling_profiles\Service\RuleHandlerManager;
 
 /**
- * Custom Asset Resolver class dependent on the styling profile.
+ * Custom Asset Resolver decorator dependent on the styling profile.
  */
-class AssetResolver extends CoreAssetResolver {
+class AssetResolver implements AssetResolverInterface {
+
+  /**
+   * The decorated asset resolver service.
+   *
+   * @var \Drupal\Core\Asset\AssetResolverInterface
+   */
+  protected $innerAssetResolver;
+
+  /**
+   * The library discovery service.
+   *
+   * @var \Drupal\Core\Asset\LibraryDiscoveryInterface
+   */
+  protected $libraryDiscovery;
+
+  /**
+   * The module handler.
+   *
+   * @var \Drupal\Core\Extension\ModuleHandlerInterface
+   */
+  protected $moduleHandler;
+
+  /**
+   * The theme manager.
+   *
+   * @var \Drupal\Core\Theme\ThemeManagerInterface
+   */
+  protected $themeManager;
+
+  /**
+   * The language manager.
+   *
+   * @var \Drupal\Core\Language\LanguageManagerInterface
+   */
+  protected $languageManager;
+
+  /**
+   * The cache backend.
+   *
+   * @var \Drupal\Core\Cache\CacheBackendInterface
+   */
+  protected $cache;
 
   /**
    * The styling profile rule handler manager.
@@ -38,10 +78,10 @@ class AssetResolver extends CoreAssetResolver {
   /**
    * Constructs a new AssetResolver instance.
    *
+   * @param \Drupal\Core\Asset\AssetResolverInterface $inner_asset_resolver
+   *   The decorated asset resolver service.
    * @param \Drupal\Core\Asset\LibraryDiscoveryInterface $library_discovery
    *   The library discovery service.
-   * @param \Drupal\Core\Asset\LibraryDependencyResolverInterface $library_dependency_resolver
-   *   The library dependency resolver.
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
    *   The module handler.
    * @param \Drupal\Core\Theme\ThemeManagerInterface $theme_manager
@@ -50,27 +90,37 @@ class AssetResolver extends CoreAssetResolver {
    *   The language manager.
    * @param \Drupal\Core\Cache\CacheBackendInterface $cache
    *   The cache backend.
-   * @param \Drupal\Core\Extension\ThemeHandlerInterface $theme_handler
-   *   The theme handler service.
    * @param \Drupal\styling_profiles\Service\RuleHandlerManager $style_profile_rule_handler_manager
    *   The styling profile rule handler manager.
    * @param \Drupal\Core\Asset\CssCollectionOptimizerLazy $css_collection_optimizer
    *   The CSS collection optimizer.
    */
   public function __construct(
+    AssetResolverInterface $inner_asset_resolver,
     LibraryDiscoveryInterface $library_discovery,
-    LibraryDependencyResolverInterface $library_dependency_resolver,
     ModuleHandlerInterface $module_handler,
     ThemeManagerInterface $theme_manager,
     LanguageManagerInterface $language_manager,
     CacheBackendInterface $cache,
-    ThemeHandlerInterface $theme_handler,
     RuleHandlerManager $style_profile_rule_handler_manager,
     CssCollectionOptimizerLazy $css_collection_optimizer,
   ) {
-    parent::__construct($library_discovery, $library_dependency_resolver, $module_handler, $theme_manager, $language_manager, $cache, $theme_handler);
+    $this->innerAssetResolver = $inner_asset_resolver;
+    $this->libraryDiscovery = $library_discovery;
+    $this->moduleHandler = $module_handler;
+    $this->themeManager = $theme_manager;
+    $this->languageManager = $language_manager;
+    $this->cache = $cache;
     $this->styleProfileRuleHandlerManager = $style_profile_rule_handler_manager;
     $this->cssCollectionOptimizer = $css_collection_optimizer;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getJsAssets(AttachedAssetsInterface $assets, $optimize, ?LanguageInterface $language = NULL): array {
+    // Delegate to the original service for JS assets.
+    return $this->innerAssetResolver->getJsAssets($assets, $optimize, $language);
   }
 
   /**
@@ -150,6 +200,14 @@ class AssetResolver extends CoreAssetResolver {
     $this->cache->set($cid, $css, CacheBackendInterface::CACHE_PERMANENT, ['library_info']);
 
     return $css;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getLibrariesToLoad(AttachedAssetsInterface $assets): array {
+    // Delegate to the original service.
+    return $this->innerAssetResolver->getLibrariesToLoad($assets);
   }
 
 }
