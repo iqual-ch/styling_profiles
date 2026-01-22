@@ -3,45 +3,44 @@
 namespace Drupal\styling_profiles\Asset;
 
 use Drupal\Component\Utility\Crypt;
-use Drupal\Core\Asset\AssetResolver as CoreAssetResolver;
+use Drupal\Core\Asset\AssetResolver;
+use Drupal\Core\Asset\AssetResolverInterface;
 use Drupal\Core\Asset\AttachedAssetsInterface;
-use Drupal\Core\Cache\CacheBackendInterface;
-use Drupal\Core\Language\LanguageInterface;
-use Drupal\Core\Asset\LibraryDiscoveryInterface;
-use Drupal\Core\Asset\LibraryDependencyResolverInterface;
-use Drupal\Core\Extension\ModuleHandlerInterface;
-use Drupal\Core\Theme\ThemeManagerInterface;
-use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\Core\Asset\CssCollectionOptimizerLazy;
+use Drupal\Core\Asset\LibraryDependencyResolverInterface;
+use Drupal\Core\Asset\LibraryDiscoveryInterface;
+use Drupal\Core\Cache\CacheBackendInterface;
+use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Extension\ThemeHandlerInterface;
+use Drupal\Core\Language\LanguageInterface;
+use Drupal\Core\Language\LanguageManagerInterface;
+use Drupal\Core\Routing\AdminContext;
+use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\Core\Theme\ThemeManagerInterface;
 use Drupal\styling_profiles\Service\RuleHandlerManager;
 
 /**
- * Custom Asset Resolver class dependent on the styling profile.
+ * Custom Asset Resolver decorator dependent on the styling profile.
  */
-class AssetResolver extends CoreAssetResolver {
+class AssetResolverDecorator extends AssetResolver {
 
   /**
-   * The styling profile rule handler manager.
+   * Constructs a new AssetResolverDecorator instance.
    *
-   * @var \Drupal\styling_profiles\Service\RuleHandlerManagerInterface
-   */
-  protected $styleProfileRuleHandlerManager;
-
-  /**
-   * The CSS collection optimizer.
-   *
-   * @var \Drupal\Core\Asset\CssCollectionOptimizerInterface
-   */
-  protected $cssCollectionOptimizer;
-
-  /**
-   * Constructs a new AssetResolver instance.
-   *
+   * @param \Drupal\Core\Asset\AssetResolverInterface $innerAssetResolver
+   *   The decorated asset resolver service.
+   * @param \Drupal\styling_profiles\Service\RuleHandlerManager $styleProfileRuleHandlerManager
+   *   The styling profile rule handler manager.
+   * @param \Drupal\Core\Asset\CssCollectionOptimizerLazy $cssCollectionOptimizer
+   *   The CSS collection optimizer.
+   * @param \Drupal\Core\Routing\RouteMatchInterface $routeMatch
+   *   The route match service.
+   * @param \Drupal\Core\Routing\AdminContext $adminContext
+   *   The admin context service.
    * @param \Drupal\Core\Asset\LibraryDiscoveryInterface $library_discovery
    *   The library discovery service.
    * @param \Drupal\Core\Asset\LibraryDependencyResolverInterface $library_dependency_resolver
-   *   The library dependency resolver.
+   *   The library dependency resolver service.
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
    *   The module handler.
    * @param \Drupal\Core\Theme\ThemeManagerInterface $theme_manager
@@ -50,33 +49,45 @@ class AssetResolver extends CoreAssetResolver {
    *   The language manager.
    * @param \Drupal\Core\Cache\CacheBackendInterface $cache
    *   The cache backend.
-   * @param \Drupal\Core\Extension\ThemeHandlerInterface $theme_handler
-   *   The theme handler service.
-   * @param \Drupal\styling_profiles\Service\RuleHandlerManager $style_profile_rule_handler_manager
-   *   The styling profile rule handler manager.
-   * @param \Drupal\Core\Asset\CssCollectionOptimizerLazy $css_collection_optimizer
-   *   The CSS collection optimizer.
+   * @param \Drupal\Core\Extension\ThemeHandlerInterface|null $theme_handler
+   *   The theme handler.
    */
   public function __construct(
+    protected AssetResolverInterface $innerAssetResolver,
+    protected RuleHandlerManager $styleProfileRuleHandlerManager,
+    protected CssCollectionOptimizerLazy $cssCollectionOptimizer,
+    protected RouteMatchInterface $routeMatch,
+    protected AdminContext $adminContext,
     LibraryDiscoveryInterface $library_discovery,
     LibraryDependencyResolverInterface $library_dependency_resolver,
     ModuleHandlerInterface $module_handler,
     ThemeManagerInterface $theme_manager,
     LanguageManagerInterface $language_manager,
     CacheBackendInterface $cache,
-    ThemeHandlerInterface $theme_handler,
-    RuleHandlerManager $style_profile_rule_handler_manager,
-    CssCollectionOptimizerLazy $css_collection_optimizer,
+    ?ThemeHandlerInterface $theme_handler = NULL,
   ) {
-    parent::__construct($library_discovery, $library_dependency_resolver, $module_handler, $theme_manager, $language_manager, $cache, $theme_handler);
-    $this->styleProfileRuleHandlerManager = $style_profile_rule_handler_manager;
-    $this->cssCollectionOptimizer = $css_collection_optimizer;
+    parent::__construct(
+      $library_discovery,
+      $library_dependency_resolver,
+      $module_handler,
+      $theme_manager,
+      $language_manager,
+      $cache,
+      $theme_handler
+    );
   }
 
   /**
    * {@inheritdoc}
    */
   public function getCssAssets(AttachedAssetsInterface $assets, $optimize, ?LanguageInterface $language = NULL) {
+    // Check if we're on an admin route and bypass custom logic.
+    $route = $this->routeMatch->getRouteObject();
+    if ($route && $this->adminContext->isAdminRoute($route)) {
+      // Use parent implementation for admin routes.
+      return parent::getCssAssets($assets, $optimize, $language);
+    }
+
     if (!$assets->getLibraries()) {
       return [];
     }
